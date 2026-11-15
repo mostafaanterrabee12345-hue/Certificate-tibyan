@@ -1,0 +1,21 @@
+{
+  "name": "أكاديمية تبيان -  النظام الإلكترونى ",
+  "short_name":"شهادات تبيان",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#0a3d25",
+  "theme_color": "#0a3d25",
+  "orientation": "portrait",
+  "icons": [
+    {
+      "src": " pnw logo.png",
+      "sizes": "192x192",
+      "type": "image/png"
+    },
+    {
+      "src": "pnw logo.png",
+      "sizes": "512x512",
+      "type": "image/png"
+    }
+  ]
+}
