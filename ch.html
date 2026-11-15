@@ -1,0 +1,464 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>نظام شهادات أكاديمية تبيان - تجميعة تلقائية للإدارة</title>
+<link rel="manifest" href="manifest.json">
+<link rel="icon" type="image/png" href="icon-512.png">
+<link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;900&family=Aref+Ruqaa:wght@400;700&family=Amiri:ital,wght@0,700;1,700&family=Reem+Kufi:wght@700&family=Noto+Naskh+Arabic:wght@700;800&display=swap" rel="stylesheet">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+<style>
+:root{--panel-bg:rgba(8,45,32,.85);--panel-border:#f5b942;--panel-input-bg:rgba(3,28,20,.9);--gold:#f5b942;--glow-color:rgba(245,185,66,.25);--body-bg:#02140e;--text-main:#f5b942;--btn-text-color:#fff}
+body.light-mode{--body-bg:#f4f7f6;--text-main:#111;--btn-text-color:#fff}
+*{box-sizing:border-box}
+body{margin:0;padding:18px;background:var(--body-bg);color:var(--text-main);font-family:'Cairo',sans-serif;transition:background .6s,color .6s}
+.app-header{text-align:center;margin:10px auto 20px;position:relative}
+.app-header h1{color:var(--gold);font-size:32px;margin-bottom:6px}
+.app-header p{color:var(--gold);opacity:.9;margin:0}
+.mode-toggle-btn{position:absolute;top:0;left:10px;background:var(--panel-input-bg);color:var(--gold);border:1px solid var(--panel-border);border-radius:50%;width:42px;height:42px;cursor:pointer;font-size:18px;display:flex;align-items:center;justify-content:center}
+.dev-status-bar{max-width:1050px;margin:0 auto 20px;background:linear-gradient(135deg,rgba(8,45,32,.95),rgba(3,20,14,.95));border:2px solid var(--panel-border);border-radius:16px;padding:12px 18px;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:12px;box-shadow:0 10px 30px rgba(0,0,0,.35),0 0 20px var(--glow-color)}
+.dev-status-bar .info-item{display:flex;align-items:center;gap:8px;font-size:14px;font-weight:700;color:var(--gold)}
+.system-status-badge{display:inline-flex;align-items:center;gap:6px;background:rgba(37,211,102,.15);border:1px solid #25d366;padding:3px 10px;border-radius:20px;font-size:12px;font-weight:bold;color:#25d366}
+.pulsing-dot{width:10px;height:10px;background:#25d366;border-radius:50%;animation:liveDotPulse 1.5s infinite}
+@keyframes liveDotPulse{0%{transform:scale(.95);box-shadow:0 0 0 0 rgba(37,211,102,.7)}70%{transform:scale(1);box-shadow:0 0 0 8px rgba(37,211,102,0)}100%{transform:scale(.95);box-shadow:0 0 0 0 rgba(37,211,102,0)}}
+.dev-tools-btn{background:var(--panel-input-bg);color:var(--gold);border:1px solid var(--panel-border);padding:6px 12px;border-radius:8px;font-size:13px;font-weight:bold;cursor:pointer;text-decoration:none;display:inline-flex;align-items:center;gap:6px}
+.dev-tools-btn:hover{background:var(--panel-border);color:var(--btn-text-color)}
+.dev-status-bar a.dev-phone{background:#25d366;color:#fff!important;padding:6px 14px;border-radius:20px;text-decoration:none;font-weight:900;font-size:13px;display:inline-flex;align-items:center;gap:5px}
+.section-nav{display:flex;justify-content:center;gap:15px;max-width:1050px;margin:0 auto 20px}
+.nav-tab{flex:1;padding:14px;border:2px solid var(--panel-border);border-radius:12px;background:var(--panel-input-bg);color:var(--gold);font-size:18px;font-weight:bold;cursor:pointer;text-align:center;transition:.4s}
+.nav-tab:hover,.nav-tab.active{background:var(--panel-border);color:#fff;box-shadow:0 0 20px var(--glow-color);transform:translateY(-2px)}
+.panel{max-width:1050px;margin:0 auto 24px;padding:22px;background:var(--panel-bg);border:2px solid var(--panel-border);border-radius:18px;box-shadow:0 12px 40px rgba(0,0,0,.15),0 0 20px var(--glow-color);position:relative;overflow:hidden}
+.progress-wrapper{margin-bottom:22px;background:rgba(0,0,0,.15);padding:12px 16px;border-radius:14px;border:1px solid rgba(245,185,66,.2)}
+.progress-header-info{display:flex;justify-content:space-between;align-items:center;margin-bottom:8px;font-size:13px;font-weight:800;color:var(--gold)}
+.progress-badge{background:var(--panel-border);color:#fff;padding:3px 10px;border-radius:20px;font-size:12px}
+.progress-container{width:100%;height:10px;background:rgba(0,0,0,.25);border-radius:10px;overflow:hidden}
+.progress-bar-fill{height:100%;width:0%;background:linear-gradient(90deg,var(--gold) 0%,#fff 50%,var(--gold) 100%);background-size:200% 100%;border-radius:10px;transition:width .4s;animation:shineAnimation 2s infinite linear}
+@keyframes shineAnimation{0%{background-position:200% 0}100%{background-position:-200% 0}}
+.hidden-section{display:none!important}
+.panel h2{text-align:center;color:var(--gold);font-size:22px;margin-bottom:15px}
+.presets-box{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:12px;background:rgba(0,0,0,.05);padding:12px;border-radius:10px;border:1px dashed var(--panel-border)}
+.preset-chip{background:var(--panel-input-bg);border:1px solid var(--panel-border);color:var(--gold);padding:6px 12px;border-radius:20px;font-size:12px;font-weight:700;cursor:pointer}
+.preset-chip:hover{background:var(--panel-border);color:#fff}
+.preset-note{font-size:12px;color:var(--gold);opacity:.9;background:rgba(245,185,66,.1);border-right:3px solid var(--gold);padding:8px 12px;border-radius:6px;margin-bottom:15px;line-height:1.5;font-weight:600}
+.form-row{display:flex;gap:14px}
+.form-group{flex:1;min-width:0;margin-bottom:14px}
+label{display:block;margin-bottom:6px;color:var(--gold);font-weight:700;font-size:14px}
+input,textarea,select{width:100%;padding:11px;border-radius:10px;border:1px solid var(--panel-border);background:var(--panel-input-bg);color:var(--gold);font:inherit;font-weight:700}
+input::placeholder{color:var(--gold);opacity:.55}
+input:focus,textarea:focus{outline:none;box-shadow:0 0 12px var(--glow-color)}
+.template-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:12px;margin-bottom:20px}
+.template-option{background:var(--panel-input-bg);border:1px solid var(--panel-border);border-radius:12px;padding:15px 8px;color:var(--gold);font:inherit;cursor:pointer;text-align:center;transition:.3s}
+.template-option strong{display:block;font-size:15px;margin-bottom:5px}
+.template-option small{display:block;font-size:11px;opacity:.8}
+.template-option.active{background:var(--panel-border);color:#fff;border:2px solid #fff;box-shadow:0 0 20px var(--panel-border);transform:scale(1.03)}
+.opt-group{display:flex;gap:8px;flex-wrap:wrap}
+.opt-btn{flex:1;min-width:90px;padding:10px 8px;background:var(--panel-input-bg);border:2px solid var(--panel-border);border-radius:9px;color:var(--gold);font-size:.88rem;font-weight:800;cursor:pointer;text-align:center}
+.opt-btn.active{background:var(--panel-border);color:#fff;border-color:#fff;box-shadow:0 4px 10px rgba(0,0,0,.2)}
+.btn{padding:12px 20px;border:1px solid var(--panel-border);border-radius:10px;background:var(--panel-input-bg);color:var(--gold);font:inherit;font-weight:700;cursor:pointer;transition:.3s;display:inline-flex;align-items:center;justify-content:center;gap:8px}
+.btn:hover{opacity:.95;transform:translateY(-2px);box-shadow:0 5px 15px var(--glow-color)}
+.btn-primary{background:var(--panel-border);color:#fff}
+.btn-whatsapp{background:#25d366;color:#fff;border-color:#25d366}
+.btn-preview-live{background:linear-gradient(135deg,#4b2e83,#2c1654);color:#f5b942;border-color:#f5b942}
+.actions{display:flex;justify-content:center;gap:12px;margin-top:15px;flex-wrap:wrap}
+.history-panel{max-width:1050px;margin:30px auto 10px;padding:15px 22px;background:var(--panel-bg);border:1px dashed var(--panel-border);border-radius:14px}
+.history-panel h3{font-size:16px;color:var(--gold);margin-bottom:10px;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:10px}
+.history-search-input{max-width:300px;padding:6px 12px;border-radius:8px;font-size:13px}
+.history-list{display:flex;flex-direction:column;gap:10px;max-height:250px;overflow-y:auto;padding-bottom:5px}
+.history-chip{background:var(--panel-input-bg);border:1px solid var(--panel-border);color:var(--gold);padding:10px 16px;border-radius:10px;font-size:13px;font-weight:bold;cursor:pointer;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:8px}
+.history-chip:hover{background:var(--panel-border);color:#fff}
+.theme-badge{padding:2px 8px;border-radius:6px;font-size:11px;font-weight:800;border:1px solid var(--panel-border);background:rgba(0,0,0,.3)}
+.stats-card-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:15px;margin-top:15px}
+.stats-card{background:var(--panel-input-bg);border:1px solid var(--panel-border);border-radius:12px;padding:15px;text-align:center}
+.stats-card h4{margin:0 0 5px;font-size:14px;color:var(--gold)}
+.stats-card .num{font-size:28px;font-weight:900;color:var(--gold)}
+.stats-card small{display:block;font-size:12px;opacity:.8;margin-top:4px}
+.stats-card.sent{border-color:#25d366}
+.sync-box{background:rgba(37,211,102,.08);border:2px solid #25d366;border-radius:12px;padding:14px;margin:20px 0}
+.sync-status{font-size:13px;font-weight:700;margin-top:8px}
+.preview-scroll{max-width:100%;overflow-x:auto;padding:8px 4px 20px}
+.certificate{width:1200px;height:850px;position:relative;margin:0 auto;padding:50px 70px;overflow:hidden;display:flex;flex-direction:column;justify-content:space-between;box-shadow:0 15px 40px #0008}
+.designer-credits{position:absolute;bottom:16px;right:65px;font-size:14px;font-weight:800;letter-spacing:.5px;color:var(--credit-color);z-index:10;font-family:'Aref Ruqaa',serif;pointer-events:none}
+.theme-border-frame,.theme-line-1,.theme-line-2{position:absolute;pointer-events:none;display:block}
+.theme-border-frame{inset:12px;background:var(--box-bg-gradient);z-index:1}
+.certificate::before{content:"";position:absolute;inset:34px;background:var(--cert-body-gradient);z-index:2;pointer-events:none}
+.theme-line-1,.theme-line-2,.corner-ornament,.corner-star,#bgOrnamentContainer,.cert-header,.cert-body,.cert-footer,.designer-credits{z-index:4!important}
+.corner-ornament{position:absolute;border-style:solid;border-color:var(--corner-deep-color)!important;filter:drop-shadow(0 2px 3px rgba(0,0,0,.25));pointer-events:none}
+.layer-1{width:48px;height:48px}.layer-1.corner-tl{top:34px;right:34px;border-width:4px 4px 0 0}.layer-1.corner-tr{top:34px;left:34px;border-width:4px 0 0 4px}.layer-1.corner-bl{bottom:34px;right:34px;border-width:0 4px 4px 0}.layer-1.corner-br{bottom:34px;left:34px;border-width:0 0 4px 4px}
+.layer-2{width:34px;height:34px}.layer-2.corner-tl{top:41px;right:41px;border-width:1.5px 1.5px 0 0}.layer-2.corner-tr{top:41px;left:41px;border-width:1.5px 0 0 1.5px}.layer-2.corner-bl{bottom:41px;right:41px;border-width:0 1.5px 1.5px 0}.layer-2.corner-br{bottom:41px;left:41px;border-width:0 0 1.5px 1.5px}
+.layer-3{width:22px;height:22px}.layer-3.corner-tl{top:47px;right:47px;border-width:2.5px 2.5px 0 0}.layer-3.corner-tr{top:47px;left:47px;border-width:2.5px 0 0 2.5px}.layer-3.corner-bl{bottom:47px;right:47px;border-width:0 2.5px 2.5px 0}.layer-3.corner-br{bottom:47px;left:47px;border-width:0 0 2.5px 2.5px}
+.corner-star{position:absolute;color:var(--corner-deep-color);font-size:13px;line-height:1;pointer-events:none}
+.corner-star.corner-tl{top:52px;right:52px}.corner-star.corner-tr{top:52px;left:52px}.corner-star.corner-bl{bottom:52px;right:52px}.corner-star.corner-br{bottom:52px;left:52px}
+.cert-teacher-green{--cert-gold:#f5b942;--cert-text:#f5b942;--cert-subtext:#b9e6d0;--credit-color:#b9e6d0;--logo-box-bg:#053b24;--logo-box-text:#f5b942;--logo-border:#f5b942;border:12px solid #f5b942;background:linear-gradient(135deg,#021c14 0%,#0a3928 48%,#01100b 100%)!important}
+.cert-teacher-green .theme-border-frame{inset:12px;border:24px solid #032b1a;background:none}
+.cert-teacher-green::before{display:none}
+.cert-teacher-green .theme-line-1{inset:8px;border:3px solid #f5b942;outline:2px solid #d8ad51;outline-offset:5px}
+.cert-teacher-green .theme-line-2{inset:38px;border:2px solid #f5b942;outline:1px solid rgba(245,185,66,.5);outline-offset:5px}
+.cert-teacher-navy{--cert-gold:#f5b942;--cert-text:#f5b942;--cert-subtext:#d7e2f0;--credit-color:#d7e2f0;--logo-box-bg:#0e2242;--logo-box-text:#f5b942;--logo-border:#f5b942;border:12px solid #f5b942;background:linear-gradient(135deg,#0a1830 0%,#192e4d 48%,#071121 100%)!important}
+.cert-teacher-navy .theme-border-frame{inset:12px;border:24px solid #08152b;background:none}
+.cert-teacher-navy::before{display:none}
+.cert-teacher-navy .theme-line-1{inset:8px;border:3px solid #f5b942;outline:2px solid #d8ad51;outline-offset:5px}
+.cert-teacher-navy .theme-line-2{inset:38px;border:2px solid #f5b942;outline:1px solid rgba(245,185,66,.5);outline-offset:5px}
+.cert-teacher-maroon{--cert-gold:#f5b942;--cert-text:#f5b942;--cert-subtext:#f0dfd5;--credit-color:#f0dfd5;--logo-box-bg:#471927;--logo-box-text:#f5b942;--logo-border:#f5b942;border:12px solid #f5b942;background:linear-gradient(135deg,#32131d 0%,#702d3b 48%,#210b12 100%)!important}
+.cert-teacher-maroon .theme-border-frame{inset:12px;border:24px solid #290e17;background:none}
+.cert-teacher-maroon::before{display:none}
+.cert-teacher-maroon .theme-line-1{inset:8px;border:3px solid #f5b942;outline:2px solid #d8ad51;outline-offset:5px}
+.cert-teacher-maroon .theme-line-2{inset:38px;border:2px solid #f5b942;outline:1px solid rgba(245,185,66,.5);outline-offset:5px}
+.certificate[class*="cert-teacher-"] .corner-ornament,.certificate[class*="cert-teacher-"] .corner-star{display:none!important}
+.cert-teacher-green .person-panel,.cert-teacher-green .achievement,.cert-teacher-green .reason-box{background:linear-gradient(135deg,#022618,#054c30)!important;border:2px solid #f5b942!important}
+.cert-teacher-green .motto{background:linear-gradient(135deg,#022618,#054c30);color:#f5b942;border:2px solid #f5b942}
+.cert-teacher-navy .person-panel,.cert-teacher-navy .achievement,.cert-teacher-navy .reason-box{background:linear-gradient(135deg,#071324,#12284c)!important;border:2px solid #f5b942!important}
+.cert-teacher-navy .motto{background:linear-gradient(135deg,#071324,#12284c);color:#f5b942;border:2px solid #f5b942}
+.cert-teacher-maroon .person-panel,.cert-teacher-maroon .achievement,.cert-teacher-maroon .reason-box{background:linear-gradient(135deg,#240c14,#522030)!important;border:2px solid #f5b942!important}
+.cert-teacher-maroon .motto{background:linear-gradient(135deg,#240c14,#522030);color:#f5b942;border:2px solid #f5b942}
+.bg-ornament-teacher{position:absolute;width:700px;height:600px;top:50%;left:50%;transform:translate(-50%,-50%);z-index:3;pointer-events:none;opacity:.1}
+.bg-ornament-teacher img,.bg-ornament-student img{width:100%;height:100%;object-fit:contain}
+.bg-ornament-student{position:absolute;width:580px;height:580px;top:54%;left:50%;transform:translate(-50%,-50%);z-index:3;pointer-events:none;opacity:.18}
+.cert-header{display:grid;grid-template-columns:1fr auto 1fr;gap:18px;align-items:center;min-height:145px;padding-bottom:22px;border-bottom:1px solid var(--cert-gold);position:relative}
+.academy-title{color:var(--cert-text);font-size:28px;font-weight:900}
+.academy-subtitle{display:block;color:var(--cert-subtext);font-size:15px;font-weight:700}
+.cert-title{width:390px;height:112px;background:url("title-diwan.png") center/contain no-repeat}
+.logo-box{justify-self:end;display:flex;align-items:center;gap:10px;padding:6px 14px;border:2px solid var(--logo-border);border-radius:40px;background:var(--logo-box-bg);position:relative}
+.logo-circle{width:52px;height:52px;border-radius:50%;background:#fff;border:2px solid var(--logo-border);display:flex;align-items:center;justify-content:center;overflow:hidden;flex-shrink:0}
+.logo-circle img{width:85%;height:85%;object-fit:contain;border-radius:50%}
+.logo-name{color:var(--logo-box-text);font-weight:bold;font-size:15px}
+.cert-body{position:relative;flex:1;display:flex;flex-direction:column;justify-content:space-evenly;align-items:center;text-align:center;padding:15px 0}
+.praise{color:var(--cert-text);font-size:24px;font-weight:900;margin:0}
+.person-panel{min-width:560px;max-width:95%;padding:14px 45px;border:3px double var(--cert-gold);border-radius:28px;display:flex;align-items:center;justify-content:center;gap:15px;position:relative}
+.person-name{color:var(--cert-text);font-size:44px;font-weight:900;margin:0}
+.achievement-caption{color:var(--cert-subtext);font-size:23px;font-weight:900;margin-bottom:10px;display:block}
+.achievement{display:inline-block;padding:12px 38px;border:3px double var(--cert-gold);border-radius:28px;color:var(--cert-text);font-size:24px;font-weight:900;position:relative}
+.reason-box{width:92%;max-width:880px;padding:12px 24px;border:2px solid var(--cert-gold);border-radius:12px;position:relative}
+.reason{margin:0;color:var(--cert-text);font-size:20px;font-weight:800}
+.cert-footer{display:grid;grid-template-columns:1fr auto 1fr;gap:25px;align-items:end;position:relative;padding-top:17px;border-top:1px solid var(--cert-gold)}
+.signature-box{text-align:center;color:var(--cert-text);font-weight:bold}
+.signature-space{min-height:25px;color:var(--cert-subtext);font-weight:800;font-size:17px}
+.signature-line{width:190px;height:1.5px;margin:7px auto;background:var(--cert-gold)}
+.signature-label{color:var(--cert-text);font-size:17px;font-weight:900}
+.motto{padding:10px 22px;border-radius:30px;font-size:16px;font-weight:900;border:2px solid}
+#advWrap{display:none;max-width:1050px;margin:0 auto 24px}
+#advWrap .adv-inner{background:#fff;padding:16px;border-radius:14px;border:2px solid var(--panel-border)}
+#advCanvas{width:100%;height:auto;display:block;border:2px solid #d4af37;box-shadow:0 8px 25px rgba(0,0,0,.15)}
+#advStatus{text-align:center;font-size:13px;color:#047857;font-weight:700;padding:8px 0 0}
+.modal-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,.9);z-index:1000;align-items:center;justify-content:center;padding:20px}
+.modal-content{position:relative;max-width:95%;max-height:95vh;overflow:auto;border:3px solid var(--gold);border-radius:14px;background:#02140e;padding:10px}
+.close-modal-btn{position:absolute;top:15px;left:20px;background:#ff4d4d;color:#fff;border:none;border-radius:50%;width:40px;height:40px;font-size:20px;font-weight:bold;cursor:pointer;z-index:1010;display:flex;align-items:center;justify-content:center}
+.archive-modal{display:none;position:fixed;inset:0;background:rgba(0,0,0,.85);z-index:3000;align-items:center;justify-content:center;padding:20px}
+.archive-box{background:var(--panel-bg);border:2px solid var(--panel-border);border-radius:20px;width:100%;max-width:800px;max-height:85vh;overflow-y:auto;padding:25px;position:relative;color:var(--text-main)}
+.archive-table{width:100%;border-collapse:collapse;margin-top:15px;font-size:14px}
+.archive-table th,.archive-table td{border:1px solid var(--panel-border);padding:10px;text-align:center}
+.archive-table th{background:var(--panel-input-bg);color:var(--gold)}
+.pin-modal{display:none;position:fixed;inset:0;background:rgba(0,0,0,.85);z-index:100;align-items:center;justify-content:center}
+.pin-box{background:#082d20;border:2px solid var(--gold);padding:30px;border-radius:16px;text-align:center;max-width:400px;width:90%}
+@media(max-width:700px){body{padding:10px}.section-nav{flex-direction:column}.form-row{flex-direction:column;gap:0}.panel{padding:14px}}
+</style>
+</head>
+<body>
+<header class="app-header">
+<button class="mode-toggle-btn" onclick="toggleDarkMode()" id="modeToggleBtn">🌙</button>
+<h1>أكاديمية تبيان</h1><p>نظام إصدار شهادات التقدير والتفوق</p>
+</header>
+<div class="dev-status-bar">
+<div class="info-item"><span>💡</span><span>تطوير وإشراف:</span><span style="color:#f3d98b;font-family:'Aref Ruqaa',serif;font-size:18px;font-weight:700">م. مصطفى عنتر 👑</span></div>
+<div class="info-item"><div class="system-status-badge"><div class="pulsing-dot"></div><span>النظام مُفعل</span></div><span id="syncBadge" style="font-size:12px;background:rgba(37,211,102,.2);padding:3px 8px;border-radius:12px">☁️ متصل تلقائي</span></div>
+<div class="info-item"><span>📊 إجمالي الشهادات:</span><strong id="liveCertCount" style="font-size:16px">0</strong></div>
+<div class="info-item" style="gap:10px"><button class="dev-tools-btn" onclick="requestResetPin()" type="button">🗑️ مسح الأرشيف</button><a href="https://wa.me/201125001728" target="_blank" class="dev-phone">💬 واتساب المطور</a></div>
+</div>
+<div class="section-nav">
+<button class="nav-tab active" id="tabStudents" onclick="switchSection('students')" type="button"> قسم الطلاب 🏆  </button>
+<button class="nav-tab" id="tabTeachers" onclick="switchSection('teachers')" type="button">👨‍🏫 قسم المعلمين  🔒</button>
+</div>
+<section id="teachersSection" class="panel hidden-section">
+<div class="progress-wrapper"><div class="progress-header-info"><span>✨ نسبة اكتمال بيانات الشهادة:</span><span class="progress-badge" id="teacherProgressText">0% (0 من 5)</span></div><div class="progress-container"><div class="progress-bar-fill" id="teacherProgressBar"></div></div></div>
+<h2> لوحة إصدار شهادات المعلمين </h2>
+<div class="form-group"><label>اختر لون الشهادة الملكية</label><div class="template-grid">
+<button class="template-option active" onclick="setTeacherTheme('green',this)" type="button"><strong>◆ الأخضر الملكي الأنيق</strong></button>
+<button class="template-option" onclick="setTeacherTheme('navy',this)" type="button"><strong>❖ الكحلي الفاخر الماسي</strong></button>
+<button class="template-option" onclick="setTeacherTheme('maroon',this)" type="button"><strong>✦ النبيتي الملكي العريق</strong></button>
+</div></div>
+<div class="form-row"><div class="form-group"><label for="teacherName">اسم المعلم / المعلمة</label><input id="teacherName" placeholder="اسم المعلم / المعلمة"></div><div class="form-group"><label for="teacherTitle">عنوان التقدير</label><input id="teacherTitle" placeholder="عنوان التقدير"></div></div>
+<div class="form-row"><div class="form-group"><label for="supervisorName">اسم المشرف</label><input id="supervisorName" placeholder="اسم المشرف"></div><div class="form-group"><label for="adminName">اعتماد الإدارة</label><input id="adminName" value="إدارة أكاديمية تبيان"></div></div>
+<div class="form-group"><label for="teacherReason">نص الشكر والدعاء</label><input id="teacherReason" placeholder="نص الدعاء"></div>
+<div class="actions"><button class="btn btn-preview-live" onclick="openLivePreview()" type="button">🔍 معاينة الشاشة الكاملة</button><button class="btn btn-primary" onclick="downloadTeacherCert()" type="button">تحميل شهادة المعلم PNG</button><button class="btn btn-whatsapp" onclick="shareTeacherCertificateDirect()" type="button">مشاركة عبر واتساب 💬</button></div>
+<hr style="border-color:var(--panel-border);margin:30px 0;opacity:.3">
+<h2>📊 لوحة إشراف الإدارة  </h2>
+<p style="text-align:center;font-size:13px;opacity:.85">بتتحدث لوحدها كل 30 ثانية وانت فاتح الإشراف، من غير ما تدوس أي زرار.</p>
+<div class="sync-box">
+<h3 style="margin:0 0 8px;color:#25d366;font-size:15px">☁️ التجميعة التلقائية - مربوط بالشيت</h3>
+<p style="font-size:12px;margin:0;opacity:.85">المعلم بيبعت بس، والإدارة بتشوف التجميعة هنا تلقائي. اللينك متثبت جوة الكود، مش محتاج تكتبه كل مرة.</p>
+<div id="syncStatus" class="sync-status">⏳ جاري جلب التجميعة...</div>
+<div style="font-size:11px;opacity:.7;margin-top:6px">آخر تحديث: <span id="lastSyncTime">—</span> | التحديث التلقائي: كل 30 ثانية</div>
+</div>
+<div class="stats-card-grid" id="statsGridContainer"></div>
+<div style="margin-top:20px">
+<div class="form-row"><div class="form-group"><label for="supFilterTeacher">فلتر: اعرض شهادات معلم معين</label><select id="supFilterTeacher" onchange="renderSupervisorStats()"><option value="all">الكل - كل المعلمين</option></select></div><div class="form-group"><label for="supSearch">بحث باسم الطالب</label><input id="supSearch" placeholder="ابحث باسم الطالب..." oninput="renderSupervisorStats()"></div></div>
+<div style="overflow-x:auto"><table class="archive-table"><thead><tr><th>المعلم اللي بعت</th><th>الطالب</th><th>عنوان التكريم</th><th>القالب</th><th>التاريخ</th></tr></thead><tbody id="supDetailBody"></tbody></table></div>
+</div>
+</section>
+<section id="studentsSection" class="panel">
+<div class="progress-wrapper"><div class="progress-header-info"><span>✨ نسبة اكتمال بيانات الشهادة:</span><span class="progress-badge" id="studentProgressText">0% (0 من 4)</span></div><div class="progress-container"><div class="progress-bar-fill" id="studentProgressBar"></div></div></div>
+<h2>🎓 لوحة إصدار شهادات الطلاب  </h2>
+<div class="presets-box"><span style="font-size:13px;font-weight:bold;width:100%;margin-bottom:6px">⚡ نماذج جاهزة:</span>
+<button class="preset-chip" type="button" onclick="applyPreset('juz')">1- إنجاز جزء معين من القرآن</button>
+<button class="preset-chip" type="button" onclick="applyPreset('excellence')">2- تفاعل مستمر وتفوق فى الحلقات</button>
+<button class="preset-chip" type="button" onclick="applyPreset('ethics')">3- تجاوب فى الفقرات الجانبية والأخلاق</button></div>
+<div class="preset-note">💡 أخي المعلم المكرم: النماذج الجاهزة أعلاه وُضعت تسهيلاً عليك، ولك كامل الحق في الإضافة والتعديل وكتابة ما تراه مناسباً لتكريم الطالب على أي شيء. هذه النماذج على سبيل التسهيل وليس الحصر..</div>
+<div class="form-group"><label>اختر القالب - طلاب متقدمة فقط</label><div class="template-grid">
+<button class="template-option active" onclick="setStudentTemplate('adv','template_green.png',this)" type="button"><strong>🎨 متقدم - الأخضر</strong><small>قالب 1 - Canvas</small></button>
+<button class="template-option" onclick="setStudentTemplate('adv','template_teal.png',this)" type="button"><strong>🎨 متقدم - التركواز</strong><small>قالب 2 - Canvas</small></button>
+<button class="template-option" onclick="setStudentTemplate('adv','template_maroon.png',this)" type="button"><strong>🎨 متقدم - العنابي</strong><small>قالب 3 - Canvas</small></button>
+<button class="template-option" onclick="setStudentTemplate('adv','template_blue.png',this)" type="button"><strong>🎨 متقدم - الأزرق</strong><small>قالب 4 - Canvas</small></button>
+</div></div>
+<div class="form-row">
+<div class="form-group"><label>نوع المكرم</label><div class="opt-group" id="genderGroup"><button type="button" class="opt-btn" data-value="الطالب المتميز">طالب</button><button type="button" class="opt-btn active" data-value="الطالبة المتميزة">طالبة</button></div><input type="hidden" id="studentGender" value="الطالبة المتميزة"></div>
+<div class="form-group"><label for="studentName">اسم الطالب / الطالبة</label><input id="studentName" placeholder="اسم الطالب / الطالبة" value=""></div>
+</div>
+<div class="form-group"><label for="studentAchievement">عنوان الإنجاز / عنوان التكريم</label><input id="studentAchievement" placeholder="عنوان التكريم" value=""></div>
+<div class="form-row">
+<div class="form-group"><label for="nameFontSize">حجم خط اسم الطالب</label><input type="number" id="nameFontSize" value="52" min="24" max="90"></div>
+<div class="form-group"><label for="honorFontSize">حجم خط عنوان التكريم</label><input type="number" id="honorFontSize" value="42" min="18" max="60"></div>
+<div class="form-group"><label for="duaFontSize">حجم خط الدعاء</label><input type="number" id="duaFontSize" value="28" min="14" max="45"></div>
+</div>
+<div class="form-group"><label for="studentReason">نص الدعاء والتقدير</label><input id="studentReason" placeholder="نص الدعاء" value=""></div>
+<div class="form-row">
+<div class="form-group"><label>صفة المعلم</label><div class="opt-group" id="teacherRoleGroup"><button type="button" class="opt-btn" data-value="المعلم">المعلم</button><button type="button" class="opt-btn active" data-value="المعلمة">المعلمة</button></div><input type="hidden" id="teacherRole" value="المعلمة"></div>
+<div class="form-group"><label for="studentTeacher">اسم المعلم / المعلمة</label><input id="studentTeacher" placeholder="اسم المعلم" value=""></div>
+</div>
+<div class="actions"><button class="btn btn-preview-live" onclick="openLivePreview()" type="button">🔍 معاينة الشاشة الكاملة</button><button class="btn btn-primary" onclick="downloadStudentCert()" type="button">تحميل شهادة الطالب PNG</button><button class="btn btn-whatsapp" onclick="shareStudentCertificateDirect()" type="button">مشاركة عبر واتساب 💬</button></div>
+</section>
+<h2 id="previewTitle" style="text-align:center;color:var(--gold)">معاينة الشهادة المتقدمة</h2>
+<div class="preview-scroll" id="classicWrap" style="display:none">
+<div id="certificate" class="certificate cert-teacher-green">
+<div class="theme-border-frame"></div><div class="theme-line-1"></div><div class="theme-line-2"></div>
+<div id="bgOrnamentContainer" class="bg-ornament-teacher"><img id="ornamentImg" src="ornament.png" alt=""></div>
+<header class="cert-header"><div><div class="academy-title">أكاديمية تبيان</div><span class="academy-subtitle">للقرآن الكريم والعلوم الشرعية</span></div><div id="certTitle" class="cert-title"></div><div class="logo-box"><div class="logo-circle"><img src="logo.png" alt=""></div><span class="logo-name">أكاديمية تبيان</span></div></header>
+<main class="cert-body"><p class="praise" id="dispPraise">بكل فخر واعتزاز، تمنح إدارة الأكاديمية هذه الشهادة إلى</p><div class="person-panel"><span style="font-size:20px">❖</span><p id="dispName" class="person-name">اسم المعلم</p><span style="font-size:20px">❖</span></div><div><span class="achievement-caption" id="dispCaption">عنوان التكريم:</span><div id="dispAchievement" class="achievement">عنوان التكريم</div></div><div class="reason-box"><p id="dispReason" class="reason">نص الدعاء</p></div></main>
+<footer class="cert-footer"><div class="signature-box"><div class="signature-space" id="dispLabelLeft">اعتماد المشرف</div><div class="signature-line"></div><div class="signature-label" id="dispSigLeft">اسم المشرف</div></div><div class="motto">✦ وتم هذا بفضل الله وتوفيقه ✦</div><div class="signature-box"><div class="signature-space">اعتماد الإدارة</div><div class="signature-line"></div><div class="signature-label" id="dispSigRight">إدارة أكاديمية تبيان</div></div></footer>
+<div class="designer-credits">Designed & Developed by The electronic software system </div>
+</div>
+</div>
+<div id="advWrap" style="display:block"><div class="adv-inner"><canvas id="advCanvas" width="1536" height="1024"></canvas><div id="advStatus">جاري تحميل القالب...</div></div></div>
+<div class="history-panel" id="historyPanelContainer" style="display:none"><h3><span>📜 سجل شهاداتي</span><input type="text" id="historySearchInput" class="history-search-input" placeholder="🔍 ابحث باسم الطالب..." oninput="filterHistoryList()"><button class="dev-tools-btn" onclick="openArchiveModal()" type="button" style="font-size:12px">📋 فتح الأرشيف</button></h3><div class="history-list" id="historyChipsList"></div></div>
+<div id="archiveModal" class="archive-modal"><div class="archive-box"><button class="close-modal-btn" onclick="closeArchiveModal()" type="button">✕</button><h3 style="color:var(--gold);text-align:center">🏛️ الأرشيف الشامل</h3><div style="overflow-x:auto"><table class="archive-table"><thead><tr><th>#</th><th>الاسم</th><th>القسم</th><th>اللون</th><th>التاريخ</th><th>استعراض</th></tr></thead><tbody id="archiveTableBody"></tbody></table></div><div style="text-align:center;margin-top:20px"><button class="btn btn-primary" onclick="closeArchiveModal()" type="button">إغلاق</button></div></div></div>
+<div id="devResetPinModal" class="pin-modal"><div class="pin-box"><h3 style="color:var(--gold)">🔐 رمز المطور</h3><input type="password" id="devPinInput" placeholder="رمز المطور" style="text-align:center;font-size:20px;margin:15px 0"><div style="display:flex;gap:10px;justify-content:center"><button class="btn btn-primary" onclick="verifyDevResetPin()" type="button">تنفيذ المسح</button><button class="btn" onclick="closeDevResetModal()" type="button">إلغاء</button></div><p id="devPinError" style="color:#ffbaba"></p></div></div>
+<div id="livePreviewModal" class="modal-overlay"><div class="modal-content"><button class="close-modal-btn" onclick="closeLivePreview()" type="button">✕</button><div id="modalCertContainer"></div></div></div>
+<div id="pinModal" class="pin-modal"><div class="pin-box"><h3 style="color:var(--gold)">أدخل الرمز السري لقسم المعلمين والإشراف</h3><input type="password" id="pinInput" placeholder="الرمز" style="text-align:center;font-size:20px;margin:15px 0"><div style="display:flex;gap:10px;justify-content:center"><button class="btn btn-primary" onclick="verifyPin()" type="button">دخول</button><button class="btn" onclick="closePinModal()" type="button">إلغاء</button></div><p id="pinError" style="color:#ffbaba"></p></div></div>
+<script>
+const SYNC_URL = "https://script.google.com/macros/s/AKfycbx4gSEXvO9QySxEZfOYPDLQSJK3f5vLMyrPeUyzNgqfgPVeEKY_1m_ei_2x851P4sE/exec";
+let currentMode='students',isTeacherUnlocked=false,currentThemeClass='cert-teacher-green',currentTeacherTheme='cert-teacher-green';
+let studentKind='adv',advTemplateFile='template_green.png',syncTimer=null,isSyncing=false;
+const TEACHER_PIN="eng5",DEV_PIN="eng5",$=id=>document.getElementById(id);
+const themeNamesMap={'cert-teacher-green':'🌿 الأخضر الملكي','cert-teacher-navy':'⚓ الكحلي الفاخر','cert-teacher-maroon':'🍷 النبيتي العريق','template_green.png':'🎨 متقدم أخضر','template_teal.png':'🎨 متقدم تركواز','template_maroon.png':'🎨 متقدم عنابي','template_blue.png':'🎨 متقدم أزرق'};
+const MY_ARCHIVE_KEY='tbian_my_archive';
+const SHEET_CACHE_KEY='tbian_sheet_cache';
+function isSyncConfigured(){return SYNC_URL && SYNC_URL.startsWith('http') && !SYNC_URL.includes('حط_لينك');}
+function setSyncStatus(msg,ok=true){const el=$('syncStatus'); if(el){el.textContent=msg; el.style.color=ok?'#25d366':'#ff8080';} const badge=$('syncBadge'); if(badge){badge.textContent=isSyncConfigured()?'☁️ متصل تلقائي':'☁️ مش مربوط';}}
+function syncPush(item){ if(!isSyncConfigured()) return; try{ var blob = new Blob([JSON.stringify(item)], {type:'text/plain'}); if(navigator.sendBeacon && navigator.sendBeacon(SYNC_URL, blob)){ return; } }catch(e){} fetch(SYNC_URL,{method:'POST',mode:'no-cors',headers:{'Content-Type':'text/plain'},body:JSON.stringify(item)}).catch(()=>{}); }
+async function syncPull(silent=false){
+  if(!isSyncConfigured()){ if(!silent) setSyncStatus('⚠️ لسه محطتش لينك الشيت في الكود',false); return; }
+  if(isSyncing) return; isSyncing=true;
+  if(!silent) setSyncStatus('⏳ جاري جلب التجميعة من الشيت...');
+  try{
+    const res=await fetch(SYNC_URL);
+    const data=await res.json();
+    if(Array.isArray(data)){
+      localStorage.setItem(SHEET_CACHE_KEY, JSON.stringify(data));
+      renderSupervisorStats();
+      const t=new Date().toLocaleTimeString('ar-EG',{hour:'2-digit',minute:'2-digit',second:'2-digit'});
+      if($('lastSyncTime')) $('lastSyncTime').textContent=t;
+      setSyncStatus(`✅ التجميعة محدثة تلقائي - إجمالي عند الإدارة: ${data.length} شهادة`);
+    }
+  }catch(e){ setSyncStatus('❌ مش قادر أوصل للشيت - اتأكد إن اللينك صح وإن الـ Deploy معمول Anyone.',false); }
+  isSyncing=false;
+}
+function startAutoSync(){ stopAutoSync(); if(!isSyncConfigured()){ setSyncStatus('⚠️ حط لينك الشيت في الكود في سطر SYNC_URL',false); return; } syncPull(); syncTimer=setInterval(()=>{ if(currentMode==='teachers') syncPull(true); },30000); }
+function stopAutoSync(){ if(syncTimer){clearInterval(syncTimer); syncTimer=null;} }
+function syncDashboardColors(themeName){ const root=document.documentElement,isLight=document.body.classList.contains('light-mode'); if(themeName.includes('teacher-green')){root.style.setProperty('--gold',isLight?'#055231':'#f5b942');root.style.setProperty('--panel-bg',isLight?'rgba(235,245,240,.95)':'rgba(2,28,20,.85)');root.style.setProperty('--panel-border','#055231');root.style.setProperty('--panel-input-bg',isLight?'#fff':'rgba(5,59,36,.9)');root.style.setProperty('--glow-color','rgba(5,82,49,.25)');root.style.setProperty('--btn-text-color','#fff');} else if(themeName.includes('teacher-navy')){root.style.setProperty('--gold',isLight?'#0e2242':'#f5b942');root.style.setProperty('--panel-bg',isLight?'rgba(235,240,250,.95)':'rgba(10,24,48,.85)');root.style.setProperty('--panel-border','#0e2242');root.style.setProperty('--panel-input-bg',isLight?'#fff':'rgba(14,34,66,.9)');root.style.setProperty('--glow-color','rgba(14,34,66,.25)');root.style.setProperty('--btn-text-color','#fff');} else if(themeName.includes('teacher-maroon')){root.style.setProperty('--gold',isLight?'#471927':'#f5b942');root.style.setProperty('--panel-bg',isLight?'rgba(250,238,242,.95)':'rgba(50,19,29,.85)');root.style.setProperty('--panel-border','#471927');root.style.setProperty('--panel-input-bg',isLight?'#fff':'rgba(71,25,39,.9)');root.style.setProperty('--glow-color','rgba(71,25,39,.30)');root.style.setProperty('--btn-text-color','#fff');} }
+function syncAdvDashboard(file){ const root=document.documentElement,isLight=document.body.classList.contains('light-mode'); if(file==='template_green.png'){root.style.setProperty('--gold',isLight?'#055231':'#f5b942');root.style.setProperty('--panel-bg',isLight?'rgba(235,245,240,.95)':'rgba(8,45,32,.85)');root.style.setProperty('--panel-border','#055231');root.style.setProperty('--panel-input-bg',isLight?'#ffffff':'rgba(3,28,20,.9)');root.style.setProperty('--glow-color','rgba(5,82,49,.25)');} else if(file==='template_teal.png'){root.style.setProperty('--gold',isLight?'#0f4c47':'#f1c982');root.style.setProperty('--panel-bg',isLight?'rgba(224,242,241,.95)':'rgba(4,47,46,.88)');root.style.setProperty('--panel-border','#0f4c47');root.style.setProperty('--panel-input-bg',isLight?'#ffffff':'rgba(3,30,29,.9)');root.style.setProperty('--glow-color','rgba(15,76,71,.30)');} else if(file==='template_maroon.png'){root.style.setProperty('--gold',isLight?'#601010':'#f1c982');root.style.setProperty('--panel-bg',isLight?'rgba(252,232,230,.95)':'rgba(58,5,5,.88)');root.style.setProperty('--panel-border','#8c3b52');root.style.setProperty('--panel-input-bg',isLight?'#ffffff':'rgba(35,3,3,.9)');root.style.setProperty('--glow-color','rgba(140,59,82,.30)');} else if(file==='template_blue.png'){root.style.setProperty('--gold',isLight?'#1e293b':'#dbeafe');root.style.setProperty('--panel-bg',isLight?'rgba(232,240,254,.95)':'rgba(15,23,42,.88)');root.style.setProperty('--panel-border','#1e293b');root.style.setProperty('--panel-input-bg',isLight?'#ffffff':'rgba(10,18,35,.9)');root.style.setProperty('--glow-color','rgba(30,41,59,.30)');} root.style.setProperty('--btn-text-color','#ffffff'); }
+function toggleDarkMode(){document.body.classList.toggle('light-mode');$('modeToggleBtn').textContent=document.body.classList.contains('light-mode')?'☀️':'🌙';if(currentMode==='teachers')syncDashboardColors(currentThemeClass);else syncAdvDashboard(advTemplateFile);}
+function applyPreset(type){ if(type==='juz'){$('studentAchievement').value='لإنجازه المتميز في حفظ جزء معين من القرآن الكريم';$('studentReason').value='سائلين المولى عز وجل أن يجعله من أهل القرآن وخاصته العاملين به';} if(type==='excellence'){$('studentAchievement').value='لتفاعله المستمر وتفوقه الملحوظ داخل الحلقات';$('studentReason').value='مع تمنياتنا له بدوام التوفيق والنجاح في مسيرته القرآنية';} if(type==='ethics'){$('studentAchievement').value='لتجاوبه الرائع في الفقرات الجانبية والتزامه بالأخلاق الفاضلة';$('studentReason').value='بارك الله فيه وفي والديه وجعله قرة عين لهما';} updateStudentPreview();advDraw();updateProgress(); }
+function updateProgress(){ const inputs=currentMode==='students'?[$('studentName').value,$('studentAchievement').value,$('studentTeacher').value,$('studentReason').value]:[$('teacherName').value,$('teacherTitle').value,$('supervisorName').value,$('adminName').value,$('teacherReason').value]; const filled=inputs.filter(v=>v&&v.trim().length>0).length,pct=Math.round(filled/inputs.length*100); if(currentMode==='students'){if($('studentProgressBar'))$('studentProgressBar').style.width=pct+'%';if($('studentProgressText'))$('studentProgressText').textContent=pct===100?'✨ مكتمل 100%':pct+'% ('+filled+' من '+inputs.length+')';} else{if($('teacherProgressBar'))$('teacherProgressBar').style.width=pct+'%';if($('teacherProgressText'))$('teacherProgressText').textContent=pct===100?'✨ مكتمل 100%':pct+'% ('+filled+' من '+inputs.length+')';} }
+function saveToMasterArchive(name,mode,theme){
+  let archive=JSON.parse(localStorage.getItem(MY_ARCHIVE_KEY)||'[]');
+  const now=new Date(),dateStr=now.toLocaleDateString('ar-EG')+' | '+now.toLocaleTimeString('ar-EG',{hour:'2-digit',minute:'2-digit'});
+  const teacherOrSup=(mode==='students'||mode==='adv')?($('studentTeacher').value.trim()||'غير محدد'):($('supervisorName').value.trim()||'غير محدد');
+  const achievement=(mode==='adv')?$('studentAchievement').value.trim():(mode==='teachers'?$('teacherTitle').value.trim():'');
+  const item={name,mode,theme,date:dateStr,teacher:teacherOrSup,achievement:achievement||'—',monthYear:(now.getMonth()+1)+'/'+now.getFullYear()};
+  archive.unshift(item);
+  localStorage.setItem(MY_ARCHIVE_KEY,JSON.stringify(archive));
+  renderHistory();
+  syncPush(item);
+}
+function filterHistoryList(){renderHistory($('historySearchInput').value.trim().toLowerCase());}
+function renderHistory(filterQuery=''){
+  const archive=JSON.parse(localStorage.getItem(MY_ARCHIVE_KEY)||'[]');
+  const panel=$('historyPanelContainer'),container=$('historyChipsList');
+  if(archive.length===0){if(panel)panel.style.display='none';return;}
+  if(panel)panel.style.display='block';
+  container.innerHTML='';
+  const filtered=filterQuery?archive.filter(i=>i.name.toLowerCase().includes(filterQuery)):archive.slice(0,10);
+  if(filtered.length===0){container.innerHTML='<p style="text-align:center">لا توجد نتائج.</p>';return;}
+  filtered.forEach(item=>{const chip=document.createElement('div');chip.className='history-chip';chip.innerHTML=`<span>${item.mode==='teachers'?'👨‍🏫':'🎓'} <strong>${item.name}</strong></span><span class="theme-badge">🎨 ${themeNamesMap[item.theme]||'مخصص'}</span><span style="opacity:.85;font-size:12px">✍️ ${item.teacher}</span><span style="opacity:.75;font-size:11px">📅 ${item.date}</span>`;chip.onclick=()=>restoreFromArchive(item);container.appendChild(chip);});
+}
+function getTrackedTeachers(){try{return JSON.parse(localStorage.getItem('tbian_tracked_teachers')||'[]');}catch(e){return [];}}
+function addTrackedTeacher(){ return; }
+function removeTrackedTeacher(name){ return; }
+function renderSupervisorStats(){
+  const archive = JSON.parse(localStorage.getItem('tbian_sheet_cache')||'[]');
+  const now = new Date(), cur = (now.getMonth()+1)+'/'+now.getFullYear();
+  let stats = {}, totalMonth = 0, totalAll = archive.length;
+
+  // حول الأرقام العربي ١٢٣ لانجليزي 123
+  function toEn(s){
+    return String(s||'').replace(/[٠-٩]/g, d => '٠١٢٣٤٥٦٧٨٩'.indexOf(d)).replace(/[۰-۹]/g, d => '۰۱۲۳۴۵۶۷۸۹'.indexOf(d)).trim();
+  }
+
+  function getMonthYear(it){
+    let my = toEn(it.monthYear);
+    if(my && my.includes('/')) return my;
+    const s = toEn(it.date);
+    let m = s.match(/(\d{4})-(\d{1,2})-(\d{1,2})/);
+    if(m) return parseInt(m[2]) + '/' + m[1];
+    m = s.match(/(\d{1,2})[\/\-](\d{1,2})[\/\-](\d{4})/);
+    if(m) return parseInt(m[2]) + '/' + m[3];
+    // لو معرفش يقرا التاريخ خالص، اعتبرها بتاعة الشهر ده، لأن النظام لسه بادئ
+    return cur;
+  }
+
+  archive.forEach(it=>{
+    const my = getMonthYear(it);
+    if(my===cur){ totalMonth++; const t = it.teacher || 'غير محدد'; stats[t] = (stats[t]||0)+1; }
+  });
+
+  let html = `<div class="stats-card"><h4>📊 إجمالي الشهادات من أول النظام</h4><div class="num">${totalAll}</div><small>كل الشهادات - من الشيت</small></div><div class="stats-card"><h4>📅 إجمالي شهادات الشهر ده</h4><div class="num">${totalMonth}</div><small>شهر ${cur}</small></div>`;
+
+  if(Object.keys(stats).length===0){
+    html += `<div class="stats-card"><h4>👨‍🏫 لسه مفيش معلمين بعتوا الشهر ده</h4><div class="num">0</div><small>أول ما معلم يبعت هيظهر هنا لوحده</small></div>`;
+  } else {
+    for(const [t,c] of Object.entries(stats)){
+      html += `<div class="stats-card sent"><h4>👨‍🏫 ${t}</h4><div class="num">${c}</div><small>شهادة هذا الشهر</small></div>`;
+    }
+  }
+
+  const c1 = $('statsGridContainer'); if(c1) c1.innerHTML = html;
+
+  const sel = $('supFilterTeacher');
+  if(sel){
+    const curVal = sel.value||'all';
+    const allTeachers = [...new Set(archive.map(x=>x.teacher||'غير محدد'))];
+    sel.innerHTML = '<option value="all">الكل - كل المعلمين</option>' + allTeachers.map(t=>`<option value="${t}">${t}</option>`).join('');
+    sel.value = allTeachers.includes(curVal) ? curVal : 'all';
+  }
+
+  const tbody = $('supDetailBody');
+  if(tbody){
+    tbody.innerHTML='';
+    const filterTeacher = $('supFilterTeacher') ? $('supFilterTeacher').value : 'all';
+    const q = $('supSearch') ? $('supSearch').value.trim().toLowerCase() : '';
+    let filtered = archive.filter(it=>{
+      if(filterTeacher!=='all' && it.teacher!==filterTeacher) return false;
+      if(q && !it.name.toLowerCase().includes(q)) return false;
+      return true;
+    });
+    if(filtered.length===0){ tbody.innerHTML='<tr><td colspan="5" style="padding:15px">لا توجد شهادات مطابقة.</td></tr>'; }
+    else filtered.slice(0,50).forEach(it=>{
+      const tr=document.createElement('tr');
+      tr.innerHTML=`<td style="font-weight:700">${it.teacher}</td><td style="font-weight:700;color:var(--gold)">${it.name}</td><td style="font-size:12px;max-width:220px">${it.achievement||'—'}</td><td><span class="theme-badge">${themeNamesMap[it.theme]||'مخصص'}</span></td><td style="font-size:11px">${it.date}</td>`;
+      tbody.appendChild(tr);
+    });
+  }
+}
+function restoreFromArchive(item){ currentMode=item.mode; $('tabStudents').classList.toggle('active',currentMode!=='teachers'); $('tabTeachers').classList.toggle('active',currentMode==='teachers'); if(item.mode==='students'||item.mode==='adv'){ $('studentsSection').classList.remove('hidden-section');$('teachersSection').classList.add('hidden-section'); $('studentName').value=item.name; setStudentTemplate('adv',item.theme,null); updateStudentPreview(); }else{ $('studentsSection').classList.add('hidden-section');$('teachersSection').classList.remove('hidden-section'); currentTeacherTheme=item.theme;$('teacherName').value=item.name; currentThemeClass=item.theme;updateCertificateClasses();updateTeacherPreview(); $('bgOrnamentContainer').className='bg-ornament-teacher';$('ornamentImg').src='ornament.png';$('certTitle').style.backgroundImage='url("title-thanks.png")'; } updateProgress();closeArchiveModal(); }
+function renderArchiveTable(){ const archive=JSON.parse(localStorage.getItem(MY_ARCHIVE_KEY)||'[]'),tbody=$('archiveTableBody');tbody.innerHTML=''; if(archive.length===0){tbody.innerHTML='<tr><td colspan="6">لا توجد شهادات في أرشيف موبايلك.</td></tr>';return;} archive.forEach((item,i)=>{const tr=document.createElement('tr');tr.innerHTML=`<td>${i+1}</td><td style="font-weight:bold">${item.name}</td><td>${item.mode==='teachers'?'👨‍🏫 معلم':'🎓 طالب'}</td><td><span class="theme-badge">${themeNamesMap[item.theme]||'مخصص'}</span></td><td style="font-family:monospace">${item.date}</td><td><button class="btn btn-primary" style="padding:4px 10px;font-size:12px" onclick="restoreAndClose(${i})">استعراض</button></td>`;tbody.appendChild(tr);}); }
+function restoreAndClose(i){const a=JSON.parse(localStorage.getItem(MY_ARCHIVE_KEY)||'[]');if(a[i])restoreFromArchive(a[i]);}
+function openArchiveModal(){renderArchiveTable();$('archiveModal').style.display='flex';}
+function closeArchiveModal(){$('archiveModal').style.display='none';}
+function requestResetPin(){$('devResetPinModal').style.display='flex';$('devPinInput').value='';$('devPinError').textContent='';}
+function closeDevResetModal(){$('devResetPinModal').style.display='none';}
+function verifyDevResetPin(){if($('devPinInput').value===DEV_PIN){localStorage.removeItem(MY_ARCHIVE_KEY);localStorage.removeItem('tbian_master_archive_v3');renderHistory();closeDevResetModal();alert('تم مسح الأرشيف بتاع موبايلك بس، والإحصائيات من الشيت زي ما هي');}else $('devPinError').textContent='رمز المطور غير صحيح!';}
+function updateCertificateClasses(){$('certificate').className=`certificate ${currentThemeClass}`;syncDashboardColors(currentThemeClass);}
+function switchSection(mode){ if(mode==='teachers'&&!isTeacherUnlocked){$('pinModal').style.display='flex';return;} currentMode=mode;$('tabStudents').classList.toggle('active',mode==='students');$('tabTeachers').classList.toggle('active',mode==='teachers'); if(mode==='students'){ stopAutoSync(); $('studentsSection').classList.remove('hidden-section');$('teachersSection').classList.add('hidden-section'); $('classicWrap').style.display='none';$('advWrap').style.display='block';$('previewTitle').textContent='معاينة الشهادة المتقدمة'; syncAdvDashboard(advTemplateFile);updateStudentPreview();advDraw(); }else{ $('studentsSection').classList.add('hidden-section');$('teachersSection').classList.remove('hidden-section'); currentThemeClass=currentTeacherTheme;updateCertificateClasses();updateTeacherPreview(); $('bgOrnamentContainer').className='bg-ornament-teacher';$('ornamentImg').src='ornament.png';$('certTitle').style.backgroundImage='url("title-thanks.png")'; $('classicWrap').style.display='block';$('advWrap').style.display='none';$('previewTitle').textContent='معاينة شهادة المعلم'; renderSupervisorStats(); startAutoSync(); } updateProgress(); }
+function verifyPin(){if($('pinInput').value===TEACHER_PIN){isTeacherUnlocked=true;$('pinModal').style.display='none';$('pinError').textContent='';switchSection('teachers');}else $('pinError').textContent='الرمز غير صحيح!';}
+function closePinModal(){$('pinModal').style.display='none';$('pinInput').value='';}
+function setTeacherTheme(color,btn){currentTeacherTheme='cert-teacher-'+color;currentThemeClass=currentTeacherTheme;updateCertificateClasses();document.querySelectorAll('#teachersSection .template-option').forEach(b=>b.classList.remove('active'));if(btn)btn.classList.add('active');updateTeacherPreview();switchSection('teachers');}
+function setStudentTemplate(kind,theme,btn){ studentKind='adv';advTemplateFile=theme; document.querySelectorAll('#studentsSection .template-option').forEach(b=>b.classList.remove('active')); if(btn) btn.classList.add('active'); $('classicWrap').style.display='none';$('advWrap').style.display='block';$('previewTitle').textContent='معاينة الشهادة المتقدمة'; syncAdvDashboard(theme);changeAdvTemplate(theme);updateProgress(); }
+function updateTeacherPreview(){ $('dispPraise').textContent='بكل فخر واعتزاز، تمنح إدارة الأكاديمية هذه الشهادة إلى'; $('dispName').textContent=$('teacherName').value.trim()||'اسم المعلم / المعلمة'; $('dispCaption').textContent='عنوان التكريم:'; $('dispAchievement').textContent=$('teacherTitle').value.trim()||'عنوان التكريم'; $('dispReason').textContent=$('teacherReason').value.trim()||'نص الدعاء'; $('dispLabelLeft').textContent='اعتماد المشرف'; $('dispSigLeft').textContent=$('supervisorName').value.trim()||'اسم المشرف'; $('dispSigRight').textContent=$('adminName').value.trim()||'إدارة أكاديمية تبيان'; applyClassicFontSizes(); }
+function updateStudentPreview(){ $('dispPraise').textContent='بكل فخر واعتزاز، تمنح إدارة الأكاديمية هذه الشهادة إلى'; $('dispName').textContent=$('studentName').value.trim()||'اسم الطالب / الطالبة'; $('dispCaption').textContent='وذلك تقديرًا:'; $('dispAchievement').textContent=$('studentAchievement').value.trim()||'عنوان التكريم'; $('dispReason').textContent=$('studentReason').value.trim()||'نص الدعاء'; const role=$('teacherRole').value||'المعلمة'; $('dispLabelLeft').textContent='اعتماد '+role; $('dispSigLeft').textContent=$('studentTeacher').value.trim()||'اسم المعلم'; $('dispSigRight').textContent='إدارة أكاديمية تبيان'; applyClassicFontSizes(); }
+function applyClassicFontSizes(){ const nameSize=Math.max(24,Math.min(90,Number($('nameFontSize').value)||52)); const honorSize=Math.max(18,Math.min(60,Number($('honorFontSize').value)||42)); const duaSize=Math.max(14,Math.min(45,Number($('duaFontSize').value)||28)); if($('dispName')) $('dispName').style.fontSize=nameSize+'px'; if($('dispAchievement')) $('dispAchievement').style.fontSize=honorSize+'px'; if($('dispReason')) $('dispReason').style.fontSize=duaSize+'px'; }
+function openLivePreview(){ const container=$('modalCertContainer');container.innerHTML=''; if(currentMode==='students'){const c=$('advCanvas').cloneNode(true);c.style.width='100%';container.appendChild(c);} else{const clone=$('certificate').cloneNode(true);clone.style.transform='scale(.75)';clone.style.transformOrigin='center';container.appendChild(clone);} $('livePreviewModal').style.display='flex'; }
+function closeLivePreview(){$('livePreviewModal').style.display='none';}
+const advCanvas=$('advCanvas'),advCtx=advCanvas.getContext('2d');
+const advBg=new Image(),advStamp=new Image();
+let advBgLoaded=false,advStampLoaded=false,advFontsReady=false;
+const advThemes={"template_green.png":{introColor:["#059669","#065f46","#022c22"],boxGrad:["#065f46","#064e3b","#022c22"],introY:.362,rightSigX:.80,leftSigX:.20},"template_teal.png":{introColor:["#0d9488","#115e59","#042f2e"],boxGrad:["#115e59","#0f4c47","#042f2e"],introY:.372,rightSigX:.80,leftSigX:.20},"template_maroon.png":{introColor:["#991b1b","#7f1d1d","#450a0a"],boxGrad:["#7f1d1d","#601010","#3a0505"],introY:.362,rightSigX:.75,leftSigX:.25},"template_blue.png":{introColor:["#1e40af","#1e3a8a","#172554"],boxGrad:["#1e3a8a","#1e293b","#0f172a"],introY:.372,rightSigX:.80,leftSigX:.20}};
+function advGetTheme(){return advThemes[advTemplateFile]||advThemes["template_green.png"];}
+function advSetFont(s,f,w=700){advCtx.font=`${w} ${s}px "${f}",sans-serif`;}
+function advFit(t,maxW,size,minS,f,w=700){while(size>minS){advSetFont(size,f,w);if(advCtx.measureText(t).width<=maxW)break;size--;}return size;}
+function advWrap(t,maxW){const words=t.trim().split(/\s+/).filter(Boolean),lines=[];let cur="";for(const w of words){const tt=cur?cur+" "+w:w;if(cur&&advCtx.measureText(tt).width>maxW){lines.push(cur);cur=w;}else cur=tt;}if(cur)lines.push(cur);return lines;}
+function advDrawLines(lines,x,y,lh){lines.forEach((l,i)=>advCtx.fillText(l,x,y+i*lh));}
+function advRounded(x,y,w,h,r){r=Math.min(r,w/2,h/2);advCtx.beginPath();advCtx.moveTo(x+r,y);advCtx.lineTo(x+w-r,y);advCtx.quadraticCurveTo(x+w,y,x+w,y+r);advCtx.lineTo(x+w,y+h-r);advCtx.quadraticCurveTo(x+w,y+h,x+w-r,y+h);advCtx.lineTo(x+r,y+h);advCtx.quadraticCurveTo(x,y+h,x,y+h-r);advCtx.lineTo(x,y+r);advCtx.quadraticCurveTo(x,y,x+r,y);advCtx.closePath();}
+function advDraw(){
+  if(!advBgLoaded||!advFontsReady) return;
+  const W=advCanvas.width,H=advCanvas.height,centerX=W*.525,theme=advGetTheme();
+  advCtx.clearRect(0,0,W,H);advCtx.save();advCtx.direction="rtl";advCtx.textAlign="center";advCtx.textBaseline="middle";
+  advCtx.drawImage(advBg,0,0,W,H);
+  if(advStampLoaded){const s=H*.145;advCtx.drawImage(advStamp,W*.875-s/2,H*.105-s/2,s,s);}
+  advCtx.save();advCtx.fillStyle="#f8e7ad";advCtx.shadowColor="rgba(0,0,0,.35)";advCtx.shadowBlur=2;advCtx.shadowOffsetY=1;let mSize=H*.026;advSetFont(mSize,"Cairo",800);advDrawLines(["مبارك لك","هذا الإنجاز"],W*.88,H*.445,H*.035);advCtx.restore();
+  const gender=$('studentGender').value||"الطالبة المتميزة";
+  const intro=`تتقدم إدارة أكاديمية تبيان بأسمى آيات الشكر والتقدير إلى ${gender}`;
+  const introSize=advFit(intro,W*.54,H*.027,H*.015,"Cairo",800);
+  advCtx.save();const ig=advCtx.createLinearGradient(0,H*(theme.introY-.02),0,H*(theme.introY+.02));ig.addColorStop(0,theme.introColor[0]);ig.addColorStop(.5,theme.introColor[1]);ig.addColorStop(1,theme.introColor[2]);advCtx.fillStyle=ig;advSetFont(introSize,"Cairo",800);advCtx.fillText(intro,centerX,H*theme.introY);advCtx.restore();
+  const sName=$('studentName').value.trim()||"اسم الطالب / الطالبة";
+  const nameInput=Math.max(24,Math.min(90,Number($('nameFontSize').value)||52));
+  let nameSize=H*(nameInput/1000);
+  nameSize=advFit(sName,W*.42,nameSize,H*.035,"Cairo",900);
+  advCtx.save();const ng=advCtx.createLinearGradient(0,H*.43,0,H*.50);ng.addColorStop(0,"#b8860b");ng.addColorStop(.5,"#d4af37");ng.addColorStop(1,"#996515");advCtx.fillStyle=ng;advCtx.shadowColor="rgba(0,0,0,.25)";advCtx.shadowBlur=4;advCtx.shadowOffsetY=2;advSetFont(nameSize,"Cairo",900);advCtx.fillText(sName,centerX,H*.465);advCtx.restore();
+  const honor=$('studentAchievement').value.trim()||"عنوان التكريم";
+  const hInput=Math.max(18,Math.min(60,Number($('honorFontSize').value)||42));let hSize=H*(hInput/1000);const hMin=H*.017,hW=W*.44;let hLines=[];
+  while(hSize>=hMin){advSetFont(hSize,"Cairo",800);hLines=advWrap(honor,hW);if(hLines.length*H*.044<=H*.13)break;hSize--;}
+  advCtx.save();const bg2=advCtx.createLinearGradient(0,H*.53,0,H*.65);bg2.addColorStop(0,theme.boxGrad[0]);bg2.addColorStop(.5,theme.boxGrad[1]);bg2.addColorStop(1,theme.boxGrad[2]);advCtx.fillStyle=bg2;advCtx.shadowColor="rgba(0,0,0,.25)";advCtx.shadowBlur=4;advCtx.shadowOffsetY=2;advSetFont(hSize,"Cairo",800);const hLH=H*.048,hY=H*.602-((hLines.length-1)*hLH)/2;advDrawLines(hLines,centerX,hY,hLH);advCtx.restore();
+  const dua=$('studentReason').value.trim()||"نص الدعاء";
+  const dInput=Math.max(14,Math.min(45,Number($('duaFontSize').value)||28));let dSize=H*(dInput/1000);const dMin=H*.014,dW=W*.40,dLH=H*.042;let dLines=[];let boxH=0;const boxY=H*.745;
+  while(dSize>=dMin){advSetFont(dSize,"Cairo",700);dLines=advWrap(dua,dW);boxH=Math.max(H*.09,dLines.length*dLH+35);if(boxH<=H*.16)break;dSize--;}
+  const bx=centerX-W*.46/2,by=boxY-boxH/2;
+  advCtx.save();const dg=advCtx.createLinearGradient(bx,by,bx,by+boxH);dg.addColorStop(0,theme.boxGrad[0]);dg.addColorStop(.5,theme.boxGrad[1]);dg.addColorStop(1,theme.boxGrad[2]);advCtx.shadowColor="rgba(0,0,0,.22)";advCtx.shadowBlur=7;advCtx.shadowOffsetY=3;advRounded(bx,by,W*.46,boxH,boxH/2);advCtx.fillStyle=dg;advCtx.fill();advCtx.shadowColor="transparent";advCtx.lineWidth=3;advCtx.strokeStyle="#d4af37";advCtx.stroke();advRounded(bx+5,by+5,W*.46-10,boxH-10,boxH/2-4);advCtx.lineWidth=1;advCtx.strokeStyle="rgba(243,217,139,.6)";advCtx.stroke();advCtx.restore();
+  advCtx.save();const dg2=advCtx.createLinearGradient(0,boxY-boxH/2,0,boxY+boxH/2);dg2.addColorStop(0,"#f3d98b");dg2.addColorStop(.5,"#d4af37");dg2.addColorStop(1,"#b8860b");advCtx.fillStyle=dg2;advSetFont(dSize,"Cairo",700);const dY=boxY-((dLines.length-1)*dLH)/2;advDrawLines(dLines,centerX,dY,dLH);advCtx.restore();
+  const teacherRole=$('teacherRole').value||"المعلمة";const bTitleY=H*.852,bValY=H*.902;
+  const goldG=advCtx.createLinearGradient(0,bValY-15,0,bValY+15);goldG.addColorStop(0,"#b8860b");goldG.addColorStop(.5,"#d4af37");goldG.addColorStop(1,"#996515");
+  const titleG=advCtx.createLinearGradient(0,bTitleY-15,0,bTitleY+15);titleG.addColorStop(0,theme.boxGrad[0]);titleG.addColorStop(.5,theme.boxGrad[1]);titleG.addColorStop(1,theme.boxGrad[2]);
+  const rX=W*theme.rightSigX;advCtx.fillStyle=titleG;advSetFont(H*.029,"Cairo",900);advCtx.fillText("توقيع الإدارة",rX,bTitleY);
+  advCtx.save();advCtx.fillStyle=goldG;const aSize=advFit("إدارة أكاديمية تبيان",W*.25,H*.027,H*.018,"Cairo",900);advSetFont(aSize,"Cairo",900);advCtx.fillText("إدارة أكاديمية تبيان",rX,bValY);advCtx.restore();
+  const lX=W*theme.leftSigX;advCtx.fillStyle=titleG;advSetFont(H*.029,"Cairo",900);advCtx.fillText(`توقيع ${teacherRole}`,lX,bTitleY);
+  const tName=$('studentTeacher').value.trim()||"اسم المعلم";
+  advCtx.save();advCtx.fillStyle=goldG;const tSize=advFit(tName,W*.25,H*.027,H*.018,"Cairo",900);advSetFont(tSize,"Cairo",900);advCtx.fillText(tName,lX,bValY);advCtx.restore();
+  if(advStampLoaded){const bs=H*.135;advCtx.drawImage(advStamp,W*.50-bs/2,H*.865-bs/2,bs,bs);}
+  advCtx.restore();
+}
+function changeAdvTemplate(file){advBgLoaded=false;if($('advStatus'))$('advStatus').textContent='جاري تحميل القالب...';advBg.src=file;}
+function advInit(){
+  advBg.onload=()=>{advBgLoaded=true;advCanvas.width=advBg.naturalWidth;advCanvas.height=advBg.naturalHeight;if(advFontsReady&&advStampLoaded){advDraw();if($('advStatus'))$('advStatus').textContent='الشهادة المتقدمة جاهزة ✅';}};
+  advBg.onerror=()=>{if($('advStatus'))$('advStatus').textContent='تعذر تحميل القالب - تأكد أن ملفات template_*.png جنب الملف';};
+  advStamp.onload=()=>{advStampLoaded=true;if(advFontsReady&&advBgLoaded){advDraw();if($('advStatus'))$('advStatus').textContent='الشهادة المتقدمة جاهزة ✅';}};
+  advStamp.onerror=()=>{if($('advStatus'))$('advStatus').textContent='تعذر تحميل stamp.png';};
+  advStamp.src='stamp.png';advBg.src=advTemplateFile;
+  Promise.all([document.fonts.load('700 40px "Amiri"'),document.fonts.load('900 30px "Cairo"')]).then(async()=>{await document.fonts.ready;advFontsReady=true;if(advBgLoaded)advDraw();});
+  document.querySelectorAll('#genderGroup .opt-btn').forEach(b=>b.onclick=()=>{document.querySelectorAll('#genderGroup .opt-btn').forEach(x=>x.classList.remove('active'));b.classList.add('active');$('studentGender').value=b.dataset.value;updateStudentPreview();advDraw();});
+  document.querySelectorAll('#teacherRoleGroup .opt-btn').forEach(b=>b.onclick=()=>{document.querySelectorAll('#teacherRoleGroup .opt-btn').forEach(x=>x.classList.remove('active'));b.classList.add('active');$('teacherRole').value=b.dataset.value;updateStudentPreview();advDraw();});
+}
+function generateCanvasSafe(){return html2canvas($('certificate'),{scale:2,useCORS:true,allowTaint:true,logging:false,width:1200,height:850,windowWidth:1200});}
+function downloadStudentCert(){ const name=$('studentName').value.trim()||'الطالب'; saveToMasterArchive(name,'adv',advTemplateFile);advDraw();const link=document.createElement('a');link.download=`شهادة_${name}_متقدمة.png`;link.href=advCanvas.toDataURL('image/png');link.click(); }
+function downloadTeacherCert(){ const name=$('teacherName').value.trim()||'المعلم';updateTeacherPreview();saveToMasterArchive(name,'teachers',currentTeacherTheme); generateCanvasSafe().then(c=>{const l=document.createElement('a');l.download=`شهادة_${name}.png`;l.href=c.toDataURL('image/png',1);l.click();}); }
+function shareStudentCertificateDirect(){ const name=$('studentName').value.trim()||'البطل'; const msg=`السلام عليكم 🌟\nمبارك لك يا بطلنا (${name})! ✨\nتفضل شهادة التقدير من أكاديمية تبيان 📜💚`; saveToMasterArchive(name,'adv',advTemplateFile);advDraw(); advCanvas.toBlob(blob=>{const file=new File([blob],`شهادة_${name}.png`,{type:'image/png'});if(navigator.canShare&&navigator.canShare({files:[file]})){navigator.share({text:msg,files:[file]});}else{const a=document.createElement('a');a.download=`شهادة_${name}.png`;a.href=advCanvas.toDataURL('image/png');a.click();window.location.href=`https://api.whatsapp.com/send?text=${encodeURIComponent(msg)}`;}}); }
+function shareTeacherCertificateDirect(){ const name=$('teacherName').value.trim()||'المعلم الفاضل'; const msg=`السلام عليكم 🌿\nبارك الله في جهودكم (${name})\nتفضل شهادة التكريم من أكاديمية تبيان 📜`; saveToMasterArchive(name,'teachers',currentTeacherTheme); generateCanvasSafe().then(c=>{c.toBlob(blob=>{const file=new File([blob],`شهادة_${name}.png`,{type:'image/png'});if(navigator.canShare&&navigator.canShare({files:[file]})){navigator.share({text:msg,files:[file]});}});}); }
+['studentName','studentAchievement','studentTeacher','studentReason','nameFontSize','honorFontSize','duaFontSize'].forEach(id=>{const el=$(id);if(el)el.addEventListener('input',()=>{updateStudentPreview();advDraw();updateProgress();});});
+['teacherName','teacherTitle','supervisorName','adminName','teacherReason'].forEach(id=>{const el=$(id);if(el)el.addEventListener('input',()=>{updateTeacherPreview();updateProgress();});});
+studentKind='adv';$('classicWrap').style.display='none';$('advWrap').style.display='block';$('previewTitle').textContent='معاينة الشهادة المتقدمة';
+syncAdvDashboard(advTemplateFile);
+advInit();
+renderHistory();
+renderSupervisorStats();
+updateStudentPreview();
+updateProgress();
+</script>
+</body>
+</html>
